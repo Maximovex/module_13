@@ -54,8 +54,11 @@ async def set_weight(message, state: FSMContext):
     await state.update_data(growth=message.text)
     await message.answer('Введите свой вес(кг):')
     await state.set_state(UserState.weight)
-    await state.update_data(weight=message.text)
 
+
+@dp.message(UserState.weight)
+async def calculate(message, state: FSMContext):
+    await state.update_data(weight=message.text)
     data = await state.get_data()
     result = 10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age']) + 5
     await message.answer(f'Ваша норма калорий: {result}')
